@@ -6,30 +6,28 @@ const jwt = require('jsonwebtoken');
 const dotenv = require("dotenv");
 dotenv.config({path: './.env'});
 const { Op } = require ("sequelize");
+const {bcryptHash} = require('../helpers/hash');
 
 
 ///////////////////////////////////////////////////////////
 //CreateUser
 exports.CreateUser = async (req, res, next) => {
 req.body.image = req.file.originalname;
-    //bcrypt
-    const saltRounds = 10;
-    bcrypt.hash(req.body.password,saltRounds,(_error,hash) => {
+        
+    req.body.password = await bcryptHash(req.body.password)
+    console.log(req.body.password);
 
-        req.body.password = hash;
-        console.log(req.body);
-        Create(req.body)
-            .then(createUser => {
-                res.send({
-                    message:"Successfully Created!"
-                })
+    Create(req.body)
+        .then(createUser => {
+            res.send({
+                message:"Successfully Created!"
             })
-            .catch(error => {
-                res.send({
-                    message:"Unsuccesful!"
-                })
+        })
+        .catch(error => {
+            res.send({
+                message:"Unsuccesful!"
             })
-    })
+        })
 }
 
 /////////////////////////////////////////////////////
@@ -93,13 +91,12 @@ req.body.image=req.file.originalname;
     const condition = {
         where: {
                 id:req.body.id
-        }};
-    const saltRounds = 10;
+        }
+    };
 
-    bcrypt.hash(req.body.password,saltRounds,(_error,hash) => {
-        req.body.password = hash;
+    req.body.password = await bcryptHash(req.body.password)
 
-        const values = req.body
+    const values = req.body
 
         Update({condition, values})
             .then(lea => {
@@ -113,8 +110,7 @@ req.body.image=req.file.originalname;
                     message:"Failed to Update!"
                 })
             })
-                
-    })
+    
 }
 
 ///////////////////////////////////////////////////////////////

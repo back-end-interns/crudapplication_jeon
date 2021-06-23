@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 const controller = require('../controllers/controller')
-const imagecontroller = require('../controllers/imagecontroller')
+
 const upload = require('../middlewares/upload')
 
 ////////
@@ -19,6 +19,6 @@ router.get('/', controller.GetAllUser);
 ////////
 router.get('/getone', controller.GetOneUser);
 ////////
-//router.post('/single', upload.single('image'), controller.UpdateUser);
+
 
 module.exports=router;
