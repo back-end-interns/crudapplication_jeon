@@ -1,15 +1,15 @@
 const {Create, LogIn, Update, Delete, GetAll, GetOne} = require('../services/user');
 
 const bcrypt = require ("bcrypt");
-const users = require('../schema/users');
 const jwt = require('jsonwebtoken');
 const dotenv = require("dotenv");
 dotenv.config({path: './.env'});
-const { Op } = require ("sequelize");
 const {bcryptHash} = require('../helpers/hash');
 
 
+
 ///////////////////////////////////////////////////////////
+
 //CreateUser
 exports.CreateUser = async (req, res, next) => {
 req.body.image = req.file.originalname;
@@ -34,14 +34,14 @@ req.body.image = req.file.originalname;
 //LogInUser
 exports.LogInUser = async (req, res) => {
     try{
-        // Username validation
+
+
+        // id validation
         const user = await LogIn({
             where: {
                 id: req.body.id
             }
         })
-
-        console.log(user);
 
         if(!user){
             res.send({
@@ -59,22 +59,19 @@ exports.LogInUser = async (req, res) => {
         }
 
         //SendingOfToken
+        const usersToken = {
+            id: user.id
+        }
         const token = jwt.sign(
             {
-                id: user.id,
-                department_id: user.department_id,
-                fname: user.fname,
-                mname: user.mname,
-                lname: user.lname,
-                image: user.image
-                
+             usersToken   
             },
-                process.env.SecuredToken, {
-                    expiresIn: '24h'
-                }
+            process.env.SecuredToken, {
+               expiresIn: '24h'
+            } 
         );
 
-        res.send({token});
+        res.json({token: token});
     }
     catch(error){
         res.send(
@@ -110,7 +107,6 @@ req.body.image=req.file.originalname;
                     message:"Failed to Update!"
                 })
             })
-    
 }
 
 ///////////////////////////////////////////////////////////////

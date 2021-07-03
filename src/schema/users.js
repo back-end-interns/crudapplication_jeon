@@ -1,5 +1,4 @@
 const { users } = require("../db/config");
-var uniqid = require('uniqid');
 
 module.exports = (sequelize, DataTypes) => {
     const User = sequelize.define('users', { 
@@ -7,8 +6,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
-            allowNull: false,
-            
+            allowNull: false
         },
         department_id:{
             type: DataTypes.INTEGER,
